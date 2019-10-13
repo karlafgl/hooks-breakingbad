@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+function Quote({quote}){
+  return(
+    <div className="frase">
+     <h1>{quote.quote}</h1>
+      <p>- {quote.author}</p>
     </div>
-  );
+  )
+}
+
+function App(){
+
+  const [quote, gettingQuote] = useState({})
+
+  const gettingApi = async ()=>{
+    const respuesta = await axios('https://breaking-bad-quotes.herokuapp.com/v1/quotes')
+  
+    //setting state with api response
+    gettingQuote(respuesta.data[0])
+  }
+
+  useEffect(()=>{
+    gettingApi()
+  }, [])
+
+  // console.log(quote)
+
+  return(
+    <div className="contenedor">
+      <Quote quote={quote}/>
+      <button onClick={()=>{gettingApi()}}>Generar Quote</button>
+    </div>
+  )
 }
 
 export default App;
